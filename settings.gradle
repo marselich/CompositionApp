@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "CompositionApp"
 include ':app'
 include ':domain'
+include ':data'
