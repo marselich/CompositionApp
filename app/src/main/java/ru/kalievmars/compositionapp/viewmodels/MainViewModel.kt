@@ -83,7 +83,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun checkAnswer(number: Int) {
-        val rightAnswer = question.value?.rightAnswer
+        val rightAnswer = _question.value?.rightAnswer
         if (number == rightAnswer) {
             countOfRightAnswers++
         }
@@ -113,7 +113,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun generateQuestion() {
-        generateQuestionUseCase(gameSettings.maxSumValue)
+        _question.value = generateQuestionUseCase(gameSettings.maxSumValue)
     }
 
     private fun formatTime(millisUntilFinished: Long): String {
@@ -125,8 +125,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun finishGame() {
         _gameResult.value = GameResult(
-            winner = enoughCountOfRightAnswers.value == true &&
-                    enoughPercentOfRightAnswers.value == true,
+            winner = _enoughCountOfRightAnswers.value == true &&
+                    _enoughPercentOfRightAnswers.value == true,
             countOfRightAnswers = countOfRightAnswers,
             countOfQuestions = countOfQuestions,
             gameSettings = gameSettings
