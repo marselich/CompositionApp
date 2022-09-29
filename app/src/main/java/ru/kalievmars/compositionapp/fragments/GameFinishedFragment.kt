@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import ru.kalievmars.compositionapp.R
 import ru.kalievmars.compositionapp.databinding.FragmentGameFinishedBinding
 import ru.kalievmars.domain.entities.GameResult
 
@@ -36,6 +38,7 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setResult()
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -51,6 +54,44 @@ class GameFinishedFragment : Fragment() {
         }
 
     }
+
+    private fun setResult() {
+        if(gameResult.winner) {
+            binding.emojiResult.setImageResource(R.drawable.ic_smile)
+        } else {
+            binding.emojiResult.setImageResource(R.drawable.ic_sad)
+        }
+
+
+        setResultToTextView(
+            binding.tvRequiredAnswers,
+            R.string.required_score,
+            gameResult.gameSettings.minCountOfRightAnswers.toString()
+        )
+        setResultToTextView(
+            binding.tvScoreAnswers,
+            R.string.score_answers,
+            gameResult.countOfRightAnswers.toString()
+        )
+        setResultToTextView(
+            binding.tvRequiredPercentage,
+            R.string.required_percentage,
+            gameResult.gameSettings.minPercentOfRightAnswers.toString()
+        )
+        setResultToTextView(
+            binding.tvScorePercentage,
+            R.string.score_percentage,
+            gameResult.percentOfRightAnswers.toString()
+        )
+    }
+
+    private fun setResultToTextView(textView: TextView, resId: Int, result: String) {
+        textView.text = String.format(
+            requireActivity().resources.getString(resId),
+            result
+        )
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import ru.kalievmars.compositionapp.R
 import ru.kalievmars.compositionapp.databinding.FragmentGameBinding
 import ru.kalievmars.compositionapp.viewmodels.MainViewModel
+import ru.kalievmars.compositionapp.viewmodels.MainViewModelFactory
 import ru.kalievmars.domain.entities.GameResult
 import ru.kalievmars.domain.entities.GameSettings
 import ru.kalievmars.domain.entities.Level
@@ -31,10 +32,13 @@ class GameFragment : Fragment() {
      }
     }
     private lateinit var level: Level
+    private val viewModelFactory: MainViewModelFactory by lazy {
+        MainViewModelFactory(requireActivity().application, level)
+    }
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(
             this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+            viewModelFactory
         )[MainViewModel::class.java]
     }
     private lateinit var gameSettings: GameSettings
@@ -64,10 +68,7 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.startGame(level)
         observeViewModel()
-
-
     }
 
     private fun observeViewModel() {
