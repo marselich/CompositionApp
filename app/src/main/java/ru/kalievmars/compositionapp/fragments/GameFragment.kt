@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import ru.kalievmars.compositionapp.R
 import ru.kalievmars.compositionapp.databinding.FragmentGameBinding
 import ru.kalievmars.compositionapp.viewmodels.MainViewModel
@@ -31,10 +33,13 @@ class GameFragment : Fragment() {
          add(binding.tvOption6)
      }
     }
-    private lateinit var level: Level
+
+    private val args by navArgs<GameFragmentArgs>()
+
     private val viewModelFactory: MainViewModelFactory by lazy {
-        MainViewModelFactory(requireActivity().application, level)
+        MainViewModelFactory(requireActivity().application, args.level)
     }
+
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(
             this,
@@ -53,7 +58,7 @@ class GameFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseArgs()
+//        parseArgs()
 
 
     }
@@ -132,24 +137,23 @@ class GameFragment : Fragment() {
         _binding = null
     }
 
-    private fun parseArgs() {
-        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
-            level = it
-        }
-    }
+//    private fun parseArgs() {
+//        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
+//            args.level = it
+//        }
+//    }
 
     private fun launchGameFinishedFragment(gameResult: GameResult) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
-            .addToBackStack(null)
-            .commit()
+        findNavController().navigate(
+            GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult)
+        )
     }
 
     companion object {
 
         const val NAME = "GameFragment"
 
-        private const val KEY_LEVEL = "level"
+        const val KEY_LEVEL = "level"
 
         fun newInstance(level: Level): GameFragment {
             return GameFragment().apply {

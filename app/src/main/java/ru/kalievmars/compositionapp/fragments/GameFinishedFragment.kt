@@ -8,13 +8,19 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import ru.kalievmars.compositionapp.R
 import ru.kalievmars.compositionapp.databinding.FragmentGameFinishedBinding
 import ru.kalievmars.domain.entities.GameResult
 
 class GameFinishedFragment : Fragment() {
 
-    private lateinit var gameResult: GameResult
+
+    private val args by navArgs<GameFinishedFragmentArgs>()
+    private val gameResult: GameResult by lazy {
+        args.gameResult
+    }
 
     private var _binding: FragmentGameFinishedBinding? = null
     private val binding: FragmentGameFinishedBinding
@@ -23,7 +29,7 @@ class GameFinishedFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            parseArgs()
+//            parseArgs()
         }
     }
 
@@ -98,22 +104,19 @@ class GameFinishedFragment : Fragment() {
         _binding = null
     }
 
-    private fun parseArgs() {
-        requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let {
-            gameResult = it
-        }
-    }
+//    private fun parseArgs() {
+//        requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let {
+//            gameResult = it
+//        }
+//    }
 
     private fun retryGame() {
-        requireActivity().supportFragmentManager.popBackStack(
-            GameFragment.NAME,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-            )
+        findNavController().popBackStack()
     }
 
     companion object {
 
-        private const val KEY_GAME_RESULT = "game_result"
+        const val KEY_GAME_RESULT = "game_result"
 
         fun newInstance(gameResult: GameResult): GameFinishedFragment {
             return GameFinishedFragment().apply {
