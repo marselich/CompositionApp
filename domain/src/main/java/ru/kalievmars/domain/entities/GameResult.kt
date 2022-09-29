@@ -19,4 +19,6 @@ data class GameResult(
                 return (countOfRightAnswers / countOfQuestions.toDouble() * 100).toInt()
             }
 
+
+
 }
